@@ -1,13 +1,13 @@
 // src/components/Banner.tsx
 import React, { useEffect, useState, memo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Calendar, MapPin, Clock, Map } from 'lucide-react';
+import { Calendar, MapPin, Clock } from 'lucide-react';
 
-// [깜빡임 방지 해결책] React.memo를 사용해 가치(value)가 실제로 변할 때만 컴포넌트가 깜빡이도록 고정
+// ★ 핵심 해결책: Netlify 배포 환경에서 이미지가 깨지지 않도록 절대경로로 직접 수입합니다.
+import bannerImg from '../assets/images/banner_1.png';
+
 const FlipCard = memo(({ value, label }: { value: number; label: string }) => {
     const formatNum = (num: number) => String(num).padStart(2, '0');
-    const formatted = formatNum(value);
-
     return (
         <div className="flex flex-col items-center">
             <div className="relative flex h-14 w-12 sm:h-16 sm:w-14 items-center justify-center rounded-lg border border-slate-700/60 bg-[#070b14] shadow-lg overflow-hidden">
@@ -21,7 +21,7 @@ const FlipCard = memo(({ value, label }: { value: number; label: string }) => {
                         transition={{ type: 'spring', stiffness: 250, damping: 18 }}
                         className="font-mono text-xl sm:text-2xl font-black text-[#dfc082] tracking-tight"
                     >
-                        {formatted}
+                        {formatNum(value)}
                     </motion.span>
                 </AnimatePresence>
                 <div className="absolute inset-x-0 top-0 h-1/2 bg-white/[0.02] pointer-events-none" />
@@ -36,53 +36,39 @@ const FlipCard = memo(({ value, label }: { value: number; label: string }) => {
 FlipCard.displayName = 'FlipCard';
 
 export default function Banner() {
-    // 목표 시간: 2026년 12월 25일 18시 00분 00초
     const targetDate = new Date('2026-12-25T18:00:00+09:00').getTime();
-
-    const [timeLeft, setTimeLeft] = useState({
-        days: 0,
-        hours: 0,
-        minutes: 0,
-        seconds: 0,
-        isOver: false,
-    });
+    const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0, isOver: false });
 
     useEffect(() => {
         const calculateTimeLeft = () => {
             const now = Date.now();
             const difference = targetDate - now;
-
             if (difference <= 0) {
                 setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0, isOver: true });
                 return;
             }
-
             const days = Math.floor(difference / (1000 * 60 * 60 * 24));
             const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
             const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
             const seconds = Math.floor((difference % (1000 * 60)) / 1000);
-
             setTimeLeft({ days, hours, minutes, seconds, isOver: false });
         };
-
         calculateTimeLeft();
         const interval = setInterval(calculateTimeLeft, 1000);
-
         return () => clearInterval(interval);
     }, [targetDate]);
 
     return (
         <div className="relative w-full rounded-2xl border border-gold-500/20 bg-[#0e1526] shadow-2xl overflow-hidden">
-
-            {/* 1. 이미지 배너 및 오버레이 아트워크 영역 */}
             <div className="relative h-56 sm:h-72 md:h-80 w-full overflow-hidden select-none">
+                {/* ★ 핵심 마감:src 속성에 방금 위에서 수입한 bannerImg 변수를 매핑합니다. */}
                 <img
-                    src="/src/assets/images/banner_1.png"
+                    src={bannerImg}
                     alt="Gala Night 2026 배경"
                     className="absolute inset-0 h-full w-full object-cover opacity-35 transition-all duration-1000 scale-[1.01]"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#0e1526] via-transparent to-black/70" />
-                <div className="absolute inset-0 bg-gradient-to-r from-[#0e1526]/40 via-transparent to-[#0e1526]/40" />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#060a13] via-transparent to-black/70" />
+                <div className="absolute inset-0 bg-gradient-to-r from-[#060a13]/40 via-transparent to-[#060a13]/40" />
 
                 <div className="absolute inset-0 flex flex-col justify-between p-5 sm:p-7 z-10">
                     <div className="flex items-center justify-between w-full">
@@ -99,27 +85,19 @@ export default function Banner() {
                             <p className="font-serif text-[10px] sm:text-xs tracking-[0.4em] text-[#c6a052]/60 uppercase pl-1">
                                 INVITATION
                             </p>
-                            <motion.h1
-                                initial={{ y: 15, opacity: 0 }}
-                                animate={{ y: 0, opacity: 1 }}
-                                className="font-serif text-3xl sm:text-5xl font-black tracking-normal bg-gradient-to-r from-amber-200 via-yellow-400 to-amber-200 bg-[length:200%_auto] bg-clip-text text-transparent drop-shadow-[0_4px_12px_rgba(198,160/82,0.5)] animate-shimmer"
-                                style={{ animation: 'shimmer 3s linear infinite' }}
-                            >
+                            <h1 className="font-serif text-3xl sm:text-5xl font-black tracking-normal bg-gradient-to-r from-amber-200 via-yellow-400 to-amber-200 bg-[length:200%_auto] bg-clip-text text-transparent drop-shadow-[0_4px_12px_rgba(198,160,82,0.5)]">
                                 2026 송년의 밤
-                            </motion.h1>
+                            </h1>
                         </div>
-                        <p className="font-sans text-[11px] sm:text-xs md:text-sm text-slate-300 tracking-wide font-light max-w-md leading-relaxed drop-shadow-sm border-l-2 border-[#c6a052]/30 pl-2">
+                        <p className="font-sans text-[11px] sm:text-xs md:text-sm text-slate-300 tracking-wide font-light max-w-md leading-relaxed border-l-2 border-[#c6a052]/30 pl-2">
                             한 해 동안의 눈부신 여정에 감사드리며, 더 높은 도약을 꿈꾸는 자리에 함께 동행해 주세요.
                         </p>
                     </div>
                 </div>
             </div>
 
-            {/* 2. 초청 정보 및 맵 단추 정보 영역 */}
             <div className="border-t border-slate-800 bg-gradient-to-b from-[#0e1526] to-[#070b14] p-5 sm:p-6 text-center space-y-4">
-
                 <div className="mx-auto max-w-lg grid grid-cols-1 sm:grid-cols-2 gap-3 text-left">
-                    {/* 일정 카드 */}
                     <div className="flex items-center gap-3.5 rounded-xl border border-slate-800 bg-[#0a101f]/90 p-3.5 text-slate-200 shadow-md">
                         <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#c6a052]/10 border border-[#c6a052]/20 text-[#c6a052]">
                             <Calendar className="h-4.5 w-4.5" />
@@ -130,7 +108,6 @@ export default function Banner() {
                         </div>
                     </div>
 
-                    {/* 장소 카드 (워커힐 파인룸 커스텀 반영) */}
                     <div className="flex items-center gap-3.5 rounded-xl border border-slate-800 bg-[#0a101f]/90 p-3.5 text-slate-200 shadow-md">
                         <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#c6a052]/10 border border-[#c6a052]/20 text-[#c6a052]">
                             <MapPin className="h-4.5 w-4.5" />
@@ -144,32 +121,9 @@ export default function Banner() {
                     </div>
                 </div>
 
-                {/* [신규] 요구사항 2: 고급스러운 디자인 무드의 맵 라우팅 링크 연동 영역 */}
-                <div className="mx-auto max-w-lg grid grid-cols-2 gap-3 pt-1">
-                    <a
-                        href="https://map.kakao.com/?q=그랜드워커힐서울"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex items-center justify-center gap-2 py-3 px-4 rounded-xl border border-teal-500/10 bg-[#091524]/60 hover:bg-[#0d1f35] text-[12px] sm:text-sm font-bold text-teal-400 transition-all active:scale-[0.98] shadow-sm"
-                    >
-                        <Map className="h-4 w-4" />
-                        카카오맵 열기
-                    </a>
-                    <a
-                        href="https://map.naver.com/v5/search/그랜드워커힐서울"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex items-center justify-center gap-2 py-3 px-4 rounded-xl border border-emerald-500/10 bg-[#081820]/60 hover:bg-[#0c242f] text-[12px] sm:text-sm font-bold text-emerald-400 transition-all active:scale-[0.98] shadow-sm"
-                    >
-                        <Map className="h-4 w-4" />
-                        네이버지도 열기
-                    </a>
-                </div>
-
-                {/* 3. D-Day 카운트다운 박스 모듈 */}
                 <div className="mx-auto max-w-md rounded-xl border border-[#c6a052]/20 bg-[#090f1d] p-4 sm:p-5 shadow-inner mt-2">
                     <div className="flex items-center justify-center gap-2 mb-3">
-                        <Clock className="h-3.5 w-3.5 text-[#c6a052] animate-spin" style={{ animationDuration: '8s' }} />
+                        <Clock className="h-3.5 w-3.5 text-[#c6a052]" />
                         <span className="font-sans text-[11px] font-bold uppercase tracking-[0.2em] text-[#c6a052]">
                             GALA NIGHT COUNTDOWN
                         </span>
@@ -184,25 +138,16 @@ export default function Banner() {
                     ) : (
                         <div className="flex justify-center items-center gap-2.5 sm:gap-4 py-1">
                             <FlipCard value={timeLeft.days} label="Days" />
-                            <div className="text-[#c6a052]/50 font-mono text-lg font-bold -mt-4 animate-pulse">:</div>
+                            <div className="text-[#c6a052]/50 font-mono text-lg font-bold -mt-4">:</div>
                             <FlipCard value={timeLeft.hours} label="Hours" />
-                            <div className="text-[#c6a052]/50 font-mono text-lg font-bold -mt-4 animate-pulse">:</div>
+                            <div className="text-[#c6a052]/50 font-mono text-lg font-bold -mt-4">:</div>
                             <FlipCard value={timeLeft.minutes} label="Min" />
-                            <div className="text-[#c6a052]/50 font-mono text-lg font-bold -mt-4 animate-pulse">:</div>
+                            <div className="text-[#c6a052]/50 font-mono text-lg font-bold -mt-4">:</div>
                             <FlipCard value={timeLeft.seconds} label="Sec" />
                         </div>
                     )}
                 </div>
-
             </div>
-
-            <style>{`
-                @keyframes shimmer {
-                    0% { background-position: 0% center; }
-                    50% { background-position: 100% center; }
-                    100% { background-position: 0% center; }
-                }
-            `}</style>
         </div>
     );
 }

@@ -83,8 +83,8 @@ export default function SloganCompanion({ onInsertToRSVP }: SloganCompanionProps
                             type="button"
                             onClick={() => setDept(d)}
                             className={`py-2.5 text-[11px] font-bold rounded-lg border transition-all ${dept === d
-                                    ? 'border-[#c6a052] bg-[#c6a052]/10 text-[#c6a052] shadow-[0_0_10px_rgba(198,160,82,0.2)]'
-                                    : 'border-slate-800 bg-[#0c1222]/80 text-slate-500 hover:text-slate-300'
+                                ? 'border-[#c6a052] bg-[#c6a052]/10 text-[#c6a052] shadow-[0_0_10px_rgba(198,160,82,0.2)]'
+                                : 'border-slate-800 bg-[#0c1222]/80 text-slate-500 hover:text-slate-300'
                                 }`}
                         >
                             {d}
@@ -94,7 +94,7 @@ export default function SloganCompanion({ onInsertToRSVP }: SloganCompanionProps
             </div>
 
             <div>
-                <label className="block text-[10px] font-bold text-[#c6a052] uppercase tracking-widest mb-2.5">Ref 감성 및 무드 톤</label>
+                <label className="block text-[10px] font-bold text-[#c6a052] uppercase tracking-widest mb-2.5">슬로건 감성 및 무드 톤</label>
                 <div className="grid grid-cols-2 gap-2">
                     {[
                         { label: '💖 눈물 감동', value: '감동' },
@@ -105,8 +105,8 @@ export default function SloganCompanion({ onInsertToRSVP }: SloganCompanionProps
                             type="button"
                             onClick={() => setMood(m.value)}
                             className={`py-2.5 text-[11px] font-bold rounded-lg border transition-all flex items-center justify-center gap-2 ${mood === m.value
-                                    ? 'border-[#c6a052] bg-[#c6a052]/10 text-[#c6a052]'
-                                    : 'border-slate-800 bg-[#0c1222]/80 text-slate-500 hover:text-slate-300'
+                                ? 'border-[#c6a052] bg-[#c6a052]/10 text-[#c6a052]'
+                                : 'border-slate-800 bg-[#0c1222]/80 text-slate-500 hover:text-slate-300'
                                 }`}
                         >
                             {m.label}
