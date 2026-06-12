@@ -7,11 +7,9 @@ interface SloganCompanionProps {
 }
 
 export default function SloganCompanion({ onInsertToRSVP }: SloganCompanionProps) {
-    // 초기 상태를 첫 번째 부서인 '경영지원'으로 설정
     const [dept, setDept] = useState('경영지원');
     const [mood, setMood] = useState('감동');
 
-    // ★핵심 수정 사항: 요청하신 4개 부서 체계 및 부서별 맞춤 슬로건 DB 구축
     const slogansDatabase: Record<string, Record<string, string[]>> = {
         '경영지원': {
             '감동': [
@@ -63,7 +61,6 @@ export default function SloganCompanion({ onInsertToRSVP }: SloganCompanionProps
         }
     };
 
-    // 현재 선택된 부서와 무드에 맞는 슬로건 리스트 가져오기
     const currentSlogans = slogansDatabase[dept]?.[mood] || slogansDatabase['경영지원']['감동'];
 
     return (
@@ -77,13 +74,13 @@ export default function SloganCompanion({ onInsertToRSVP }: SloganCompanionProps
                 부서와 원하시는 분위기 톤앤매너를 선택해 주세요. 사내 소통을 빛내줄 위트와 애환이 담긴 2026 커스텀 단합 슬로건 세트 3가지를 즉석 인가해 드립니다.
             </p>
 
-            {/* 부서 선택 영역 */}
             <div>
                 <label className="block text-[10px] font-bold text-[#c6a052] uppercase tracking-widest mb-2.5">소속 부서 / 본부 선택</label>
                 <div className="grid grid-cols-2 gap-2">
                     {['경영지원', '연구개발', '품질보증/생산관리', '디자인/마케팅'].map((d) => (
                         <button
                             key={d}
+                            type="button"
                             onClick={() => setDept(d)}
                             className={`py-2.5 text-[11px] font-bold rounded-lg border transition-all ${dept === d
                                     ? 'border-[#c6a052] bg-[#c6a052]/10 text-[#c6a052] shadow-[0_0_10px_rgba(198,160,82,0.2)]'
@@ -96,9 +93,8 @@ export default function SloganCompanion({ onInsertToRSVP }: SloganCompanionProps
                 </div>
             </div>
 
-            {/* 무드 선택 영역 */}
             <div>
-                <label className="block text-[10px] font-bold text-[#c6a052] uppercase tracking-widest mb-2.5">슬로건 감성 및 무드 톤</label>
+                <label className="block text-[10px] font-bold text-[#c6a052] uppercase tracking-widest mb-2.5">Ref 감성 및 무드 톤</label>
                 <div className="grid grid-cols-2 gap-2">
                     {[
                         { label: '💖 눈물 감동', value: '감동' },
@@ -106,6 +102,7 @@ export default function SloganCompanion({ onInsertToRSVP }: SloganCompanionProps
                     ].map((m) => (
                         <button
                             key={m.value}
+                            type="button"
                             onClick={() => setMood(m.value)}
                             className={`py-2.5 text-[11px] font-bold rounded-lg border transition-all flex items-center justify-center gap-2 ${mood === m.value
                                     ? 'border-[#c6a052] bg-[#c6a052]/10 text-[#c6a052]'
@@ -118,15 +115,14 @@ export default function SloganCompanion({ onInsertToRSVP }: SloganCompanionProps
                 </div>
             </div>
 
-            {/* 결과 슬로건 리스트 */}
             <div className="space-y-2 pt-2">
                 {currentSlogans.map((slogan, idx) => (
                     <div key={idx} className="flex items-center justify-between gap-3 bg-[#090f1d]/80 border border-slate-800 rounded-xl p-4 shadow-sm hover:border-[#c6a052]/20 transition-all group">
                         <p className="text-xs sm:text-sm text-slate-300 font-medium leading-snug">"{slogan}"</p>
                         <button
+                            type="button"
                             onClick={() => onInsertToRSVP(slogan)}
                             className="p-2 bg-slate-800 hover:bg-[#c6a052]/20 rounded-lg border border-slate-700 hover:border-[#c6a052]/40 transition-all shrink-0"
-                            title="방명록에 바로 넣기"
                         >
                             <Plus className="h-4 w-4 text-slate-400 group-hover:text-[#c6a052]" />
                         </button>
