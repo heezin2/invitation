@@ -1,9 +1,9 @@
 // src/components/Banner.tsx
 import React, { useEffect, useState, memo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Calendar, MapPin, Clock } from 'lucide-react';
+import { Calendar, MapPin, Clock, Map } from 'lucide-react';
 
-// ★ 핵심 해결책: Netlify 배포 환경에서 이미지가 깨지지 않도록 절대경로로 직접 수입합니다.
+// Netlify 배포 환경에서도 배경화면이 절대 깨지지 않도록 이미지 직접 수입(import)
 import bannerImg from '../assets/images/banner_1.png';
 
 const FlipCard = memo(({ value, label }: { value: number; label: string }) => {
@@ -60,8 +60,8 @@ export default function Banner() {
 
     return (
         <div className="relative w-full rounded-2xl border border-gold-500/20 bg-[#0e1526] shadow-2xl overflow-hidden">
+            {/* 상단 이미지 영역 */}
             <div className="relative h-56 sm:h-72 md:h-80 w-full overflow-hidden select-none">
-                {/* ★ 핵심 마감:src 속성에 방금 위에서 수입한 bannerImg 변수를 매핑합니다. */}
                 <img
                     src={bannerImg}
                     alt="Gala Night 2026 배경"
@@ -96,7 +96,10 @@ export default function Banner() {
                 </div>
             </div>
 
+            {/* 안내 정보 영역 */}
             <div className="border-t border-slate-800 bg-gradient-to-b from-[#0e1526] to-[#070b14] p-5 sm:p-6 text-center space-y-4">
+
+                {/* 일정 & 장소 분할 카드 */}
                 <div className="mx-auto max-w-lg grid grid-cols-1 sm:grid-cols-2 gap-3 text-left">
                     <div className="flex items-center gap-3.5 rounded-xl border border-slate-800 bg-[#0a101f]/90 p-3.5 text-slate-200 shadow-md">
                         <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#c6a052]/10 border border-[#c6a052]/20 text-[#c6a052]">
@@ -121,6 +124,29 @@ export default function Banner() {
                     </div>
                 </div>
 
+                {/* ★ [복구 완료] 요구사항: 카카오맵 / 네이버 지도 원격 링크 발송 단추 */}
+                <div className="mx-auto max-w-lg grid grid-cols-2 gap-3 pt-1">
+                    <a
+                        href="https://map.kakao.com/?q=그랜드워커힐서울"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center justify-center gap-2 py-3 px-4 rounded-xl border border-teal-500/10 bg-[#091524]/60 hover:bg-[#0d1f35] text-[12px] sm:text-sm font-bold text-teal-400 transition-all active:scale-[0.98] shadow-sm"
+                    >
+                        <Map className="h-4 w-4" />
+                        카카오맵 열기
+                    </a>
+                    <a
+                        href="https://map.naver.com/v5/search/그랜드워커힐서울"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center justify-center gap-2 py-3 px-4 rounded-xl border border-emerald-500/10 bg-[#081820]/60 hover:bg-[#0c242f] text-[12px] sm:text-sm font-bold text-emerald-400 transition-all active:scale-[0.98] shadow-sm"
+                    >
+                        <Map className="h-4 w-4" />
+                        네이버지도 열기
+                    </a>
+                </div>
+
+                {/* D-Day 카운트다운 박스 */}
                 <div className="mx-auto max-w-md rounded-xl border border-[#c6a052]/20 bg-[#090f1d] p-4 sm:p-5 shadow-inner mt-2">
                     <div className="flex items-center justify-center gap-2 mb-3">
                         <Clock className="h-3.5 w-3.5 text-[#c6a052]" />
@@ -147,6 +173,7 @@ export default function Banner() {
                         </div>
                     )}
                 </div>
+
             </div>
         </div>
     );
