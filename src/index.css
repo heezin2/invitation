@@ -1,0 +1,77 @@
+/* src/index.css */
+
+/* Tailwind CSS의 3가지 핵심 요소를 불러옵니다. */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* 전체 사이트에 적용할 기본 배경색과 글자색, 색상표를 정의합니다. */
+@layer base {
+    :root {
+        /* 
+      여기서는 색상 코드를 직접 지정합니다.
+      App.tsx에서 'gold-500', 'midnight-900' 같은 색상을 쓰기 위해 여기서 연결해줍니다.
+    */
+        --color-gold-100: #FEF3C7;
+        --color-gold-400: #FBBF24;
+        --color-gold-500: #F59E0B;
+
+        --color-midnight-900: #171717;
+        --color-midnight-950: #0A0A0A;
+    }
+
+    body {
+        /* 기본 배경을 어두운 밤하늘 색으로, 글자를 밝은 금색 느낌으로 설정합니다. */
+        background-color: var(--color-midnight-900);
+        color: var(--color-gold-100);
+    }
+}
+
+/* 우리가 직접 만든 맞춤형 클래스들입니다. */
+@layer utilities {
+    .text-gold-100 {
+        color: var(--color-gold-100);
+    }
+
+    .text-gold-400 {
+        color: var(--color-gold-400);
+    }
+
+    .text-gold-500 {
+        color: var(--color-gold-500);
+    }
+
+    .bg-gold-500 {
+        background-color: var(--color-gold-500);
+    }
+
+    .bg-midnight-900 {
+        background-color: var(--color-midnight-900);
+    }
+
+    .bg-midnight-950 {
+        background-color: var(--color-midnight-950);
+    }
+
+    /* 테두리 색상들 */
+    .border-gold-500 {
+        border-color: var(--color-gold-500);
+    }
+}
+
+/* 추가적인 부드러운 애니메이션 효과를 정의합니다. */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.animate-fade-in {
+    animation: fadeIn 0.8s ease-out forwards;
+}
